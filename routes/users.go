@@ -4,15 +4,14 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ilhamgunawan/lms-api-v2/controllers"
 )
 
 func UsersRoutes(rg *gin.RouterGroup) {
 	users := rg.Group("/users")
 
 	// Get all users
-	users.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"data": "Get All Users"})
-	})
+	users.GET("/", controllers.GetUsers)
 
 	// Get user by id
 	users.GET("/:id", func(c *gin.Context) {
