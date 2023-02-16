@@ -69,3 +69,27 @@ func Login(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": res})
 }
+
+type ValidateTokenBody struct {
+	Token string `json:"token"`
+}
+
+func ValidateToken(c *gin.Context) {
+	var body ValidateTokenBody
+
+	err := c.ShouldBindJSON(&body)
+
+	if err != nil || body.Token == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid token"})
+		return
+	}
+
+	err = models.VerifyToken(body.Token)
+
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid token"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": body})
+}
