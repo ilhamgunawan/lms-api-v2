@@ -11,7 +11,7 @@ func UsersRoutes(rg *gin.RouterGroup) {
 	users := rg.Group("/users")
 
 	// Get all users
-	users.GET("/", controllers.GetUsers)
+	users.GET("", controllers.GetUsers)
 
 	// Get user by id
 	users.GET("/:id", func(c *gin.Context) {

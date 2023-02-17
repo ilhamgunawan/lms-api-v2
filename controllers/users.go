@@ -14,6 +14,7 @@ type GetUsersResponse struct {
 	Limit        int                  `json:"limit"`
 	TotalCurrent int                  `json:"total_current"`
 	TotalAll     int                  `json:"total_all"`
+	TotalPage    int                  `json:"total_page"`
 }
 
 func GetUsers(c *gin.Context) {
@@ -49,6 +50,12 @@ func GetUsers(c *gin.Context) {
 		Limit:        limit,
 		TotalCurrent: len(users),
 		TotalAll:     int(count),
+	}
+
+	res.TotalPage = res.TotalAll / res.Limit
+
+	if res.TotalPage%2 != 0 {
+		res.TotalPage += 1
 	}
 
 	c.JSON(http.StatusOK, gin.H{"data": res})
