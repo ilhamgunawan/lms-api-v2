@@ -23,8 +23,16 @@ func main() {
 
 	r := gin.Default()
 
-	// Handle CORS, AllowAll method is not secure, should customize the cors options
-	r.Use(cors.AllowAll())
+	// Handle CORS
+	c := cors.New(cors.Options{
+		AllowedOrigins:       []string{"http://localhost:7001"},
+		AllowCredentials:     true,
+		AllowedMethods:       []string{"GET", "POST", "PUT", "DELETE", "HEAD"},
+		AllowedHeaders:       []string{"*", "Authorization"},
+		OptionsPassthrough:   true,
+		OptionsSuccessStatus: 204,
+	})
+	r.Use(c)
 
 	routes.MakeRoutes(r)
 
