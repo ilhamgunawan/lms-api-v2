@@ -8,6 +8,7 @@ import (
 	"github.com/ilhamgunawan/lms-api-v2/db"
 	"github.com/ilhamgunawan/lms-api-v2/routes"
 	"github.com/joho/godotenv"
+	cors "github.com/rs/cors/wrapper/gin"
 )
 
 func main() {
@@ -21,6 +22,9 @@ func main() {
 	db.Init() // Initialize db connection
 
 	r := gin.Default()
+
+	// Handle CORS, AllowAll method is not secure, should customize the cors options
+	r.Use(cors.AllowAll())
 
 	routes.MakeRoutes(r)
 
