@@ -9,8 +9,8 @@ import (
 )
 
 type LoginRequest struct {
-	Username string
-	Password string
+	Username string `json:"user_name"`
+	Password string `json:"password"`
 }
 
 type LoginResponse struct {
