@@ -60,3 +60,21 @@ func GetUsers(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": res})
 }
+
+func GetUserById(c *gin.Context) {
+	userId := c.Param("id")
+
+	if userId == "" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Invalid user id"})
+		return
+	}
+
+	user, err := models.GetUserById(userId)
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
+}

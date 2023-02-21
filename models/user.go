@@ -56,3 +56,15 @@ func CountUsers() (count int64, err error) {
 
 	return count, nil
 }
+
+func GetUserById(id string) (user UserAccount, err error) {
+	err = db.GetDB().SelectOne(&user,
+		"SELECT ua.id, ua.first_name, ua.last_name, ua.date_of_birth, ua.gender FROM user_account ua WHERE id=$1",
+		id)
+
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}

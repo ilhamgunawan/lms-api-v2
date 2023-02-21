@@ -18,13 +18,7 @@ func UsersRoutes(rg *gin.RouterGroup) {
 	users.GET("", controllers.GetUsers)
 
 	// Get user by id
-	users.GET("/:id", func(c *gin.Context) {
-		data := make(map[string]string)
-		data["id"] = c.Param("id")
-		data["message"] = "Get user by id"
-
-		c.JSON(http.StatusOK, gin.H{"data": data})
-	})
+	users.GET("/:id", controllers.GetUserById)
 
 	// Create user
 	users.POST("/create", func(c *gin.Context) {
