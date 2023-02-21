@@ -3,7 +3,9 @@ package models
 import (
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/ilhamgunawan/lms-api-v2/db"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -65,6 +67,69 @@ func GetUserById(id string) (user UserAccount, err error) {
 	if err != nil {
 		return user, err
 	}
+
+	return user, nil
+}
+
+type CreateUserBody struct {
+	ID        string `json:"id"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Gender    string `json:"gender"`
+	BirthDate string `json:"date_of_birth"`
+	Username  string `json:"user_name"`
+	Password  string `json:"password"`
+}
+
+func CreateUser(ua db.UserAccount, ul db.UserLoginData, plainPassword string) (user db.UserAccount, err error) {
+	ua.ID = uuid.NewString()
+
+	trx, err := db.GetDB().Begin()
+
+	if err != nil {
+		return user, err
+	}
+
+	// Insert into user_Account
+	err = trx.Insert(&ua)
+
+	if err != nil {
+		trx.Rollback()
+		return user, err
+	}
+
+	// Generate password hash
+	plainPsw := []byte(plainPassword)
+	hashedPsw, err := bcrypt.GenerateFromPassword(plainPsw, 4)
+
+	if err != nil {
+		return user, err
+	}
+
+	ul.ID = uuid.NewString()
+	ul.UserId = ua.ID
+	ul.PasswordHash = string(hashedPsw)
+
+	// Insert into user_login_data
+	err = trx.Insert(&ul)
+
+	if err != nil {
+		trx.Rollback()
+		return user, err
+	}
+
+	err = trx.Commit()
+
+	if err != nil {
+		trx.Rollback()
+		return user, err
+	}
+
+	user.ID = ua.ID
+	user.FirstName = ua.FirstName
+	user.LastName = ua.LastName
+	user.Gender = ua.Gender
+	user.BirthDate = ua.BirthDate
 
 	return user, nil
 }

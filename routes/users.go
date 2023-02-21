@@ -21,12 +21,7 @@ func UsersRoutes(rg *gin.RouterGroup) {
 	users.GET("/:id", controllers.GetUserById)
 
 	// Create user
-	users.POST("/create", func(c *gin.Context) {
-		data := make(map[string]string)
-		data["message"] = "Create user"
-
-		c.JSON(http.StatusOK, gin.H{"data": data})
-	})
+	users.POST("/create", controllers.CreateUser)
 
 	// Update user by id
 	users.PUT("/:id/update", func(c *gin.Context) {

@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ilhamgunawan/lms-api-v2/db"
 	"github.com/ilhamgunawan/lms-api-v2/models"
 )
 
@@ -73,6 +74,45 @@ func GetUserById(c *gin.Context) {
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
+}
+
+type CreateUserRequest struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Gender    string `json:"gender"`
+	BirthDate string `json:"date_of_birth"`
+	Username  string `json:"user_name"`
+	Password  string `json:"password"`
+}
+
+func CreateUser(c *gin.Context) {
+	var body CreateUserRequest
+	err := c.ShouldBindJSON(&body)
+
+	if err != nil || body.BirthDate == "" || body.FirstName == "" || body.LastName == "" || body.Gender == "" || body.Username == "" || body.Password == "" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Missing fields"})
+		return
+	}
+
+	ua := db.UserAccount{
+		FirstName: body.FirstName,
+		LastName:  body.LastName,
+		Gender:    body.Gender,
+		BirthDate: body.BirthDate,
+	}
+
+	ul := db.UserLoginData{
+		Username: body.Username,
+	}
+
+	user, err := models.CreateUser(ua, ul, body.Password)
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err})
 		return
 	}
 
