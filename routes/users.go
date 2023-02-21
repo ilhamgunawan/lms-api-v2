@@ -5,10 +5,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ilhamgunawan/lms-api-v2/controllers"
+	"github.com/ilhamgunawan/lms-api-v2/middlewares"
 )
 
 func UsersRoutes(rg *gin.RouterGroup) {
 	users := rg.Group("/users")
+
+	// Use validate token middleware for router group
+	users.Use(middlewares.ValidateToken())
 
 	// Get all users
 	users.GET("", controllers.GetUsers)
