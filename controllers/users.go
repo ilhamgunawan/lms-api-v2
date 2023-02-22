@@ -136,3 +136,26 @@ func DeleteUserById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": user})
 }
+
+func UpdateUserById(c *gin.Context) {
+	userId := c.Param("id")
+	body := db.UserAccount{}
+
+	err := c.ShouldBindJSON(&body)
+
+	if err != nil || userId == "" || body.BirthDate == "" || body.FirstName == "" || body.LastName == "" || body.Gender == "" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Missing fields"})
+		return
+	}
+
+	body.ID = userId
+
+	user, err := models.UpdateUser(body)
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
+}

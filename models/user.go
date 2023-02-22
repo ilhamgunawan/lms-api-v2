@@ -182,3 +182,15 @@ func DeleteUser(userId string) (user db.UserAccount, err error) {
 
 	return user, nil
 }
+
+func UpdateUser(userAccount db.UserAccount) (ua db.UserAccount, err error) {
+	_, err = db.GetDB().Update(&userAccount)
+
+	if err != nil {
+		return ua, err
+	}
+
+	ua = userAccount
+
+	return ua, nil
+}

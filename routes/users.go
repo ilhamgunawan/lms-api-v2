@@ -1,8 +1,6 @@
 package routes
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/ilhamgunawan/lms-api-v2/controllers"
 	"github.com/ilhamgunawan/lms-api-v2/middlewares"
@@ -24,13 +22,7 @@ func UsersRoutes(rg *gin.RouterGroup) {
 	users.POST("/create", controllers.CreateUser)
 
 	// Update user by id
-	users.PUT("/:id/update", func(c *gin.Context) {
-		data := make(map[string]string)
-		data["id"] = c.Param("id")
-		data["message"] = "Update user by id"
-
-		c.JSON(http.StatusOK, gin.H{"data": data})
-	})
+	users.PUT("/:id/update", controllers.UpdateUserById)
 
 	// Delete user by id
 	users.DELETE("/:id/delete", controllers.DeleteUserById)
