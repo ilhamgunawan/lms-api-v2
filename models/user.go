@@ -133,3 +133,52 @@ func CreateUser(ua db.UserAccount, ul db.UserLoginData, plainPassword string) (u
 
 	return user, nil
 }
+
+func DeleteUser(userId string) (user db.UserAccount, err error) {
+	trx, err := db.GetDB().Begin()
+
+	if err != nil {
+		return user, err
+	}
+
+	err = trx.SelectOne(&user, "SELECT * FROM user_account WHERE id=$1", userId)
+
+	if err != nil {
+		trx.Rollback()
+		return user, err
+	}
+
+	userLoginData := db.UserLoginData{}
+
+	err = trx.SelectOne(&userLoginData, "SELECT * FROM user_login_data WHERE user_id=$1", userId)
+
+	if err != nil {
+		trx.Rollback()
+		return user, err
+	}
+
+	// Delete user login data
+	_, err = trx.Exec("DELETE FROM user_login_data WHERE user_id=$1", userId)
+
+	if err != nil {
+		trx.Rollback()
+		return user, err
+	}
+
+	// Delete user account
+	_, err = trx.Exec("DELETE FROM user_account WHERE id=$1", userId)
+
+	if err != nil {
+		trx.Rollback()
+		return user, err
+	}
+
+	err = trx.Commit()
+
+	if err != nil {
+		trx.Rollback()
+		return user, err
+	}
+
+	return user, nil
+}

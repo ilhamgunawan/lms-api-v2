@@ -33,11 +33,5 @@ func UsersRoutes(rg *gin.RouterGroup) {
 	})
 
 	// Delete user by id
-	users.DELETE("/:id/delete", func(c *gin.Context) {
-		data := make(map[string]string)
-		data["id"] = c.Param("id")
-		data["message"] = "Delete user by id"
-
-		c.JSON(http.StatusOK, gin.H{"data": data})
-	})
+	users.DELETE("/:id/delete", controllers.DeleteUserById)
 }

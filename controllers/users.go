@@ -55,7 +55,7 @@ func GetUsers(c *gin.Context) {
 
 	res.TotalPage = res.TotalAll / res.Limit
 
-	if res.TotalPage%2 != 0 {
+	if res.TotalAll%res.Limit != 0 {
 		res.TotalPage += 1
 	}
 
@@ -113,6 +113,24 @@ func CreateUser(c *gin.Context) {
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": user})
+}
+
+func DeleteUserById(c *gin.Context) {
+	userId := c.Param("id")
+
+	if userId == "" {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "No records found"})
+		return
+	}
+
+	user, err := models.DeleteUser(userId)
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": err})
 		return
 	}
 
