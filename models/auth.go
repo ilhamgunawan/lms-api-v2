@@ -36,7 +36,7 @@ func CreateToken(user User) (token string, err error) {
 	return token, nil
 }
 
-func VerifyToken(token string) (err error) {
+func VerifyToken(token string) (userId string, err error) {
 	jwtSecret := []byte(os.Getenv("JWT_SECRET"))
 
 	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
@@ -49,12 +49,20 @@ func VerifyToken(token string) (err error) {
 	})
 
 	if err != nil {
-		return err
+		return userId, err
 	}
+
+	claims, ok := parsedToken.Claims.(jwt.MapClaims)
+
+	if !ok {
+		return userId, err
+	}
+
+	userId = claims["user_id"].(string)
 
 	if _, ok := parsedToken.Claims.(jwt.MapClaims); !ok && !parsedToken.Valid {
-		return err
+		return userId, err
 	}
 
-	return nil
+	return userId, nil
 }

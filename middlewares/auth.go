@@ -16,12 +16,14 @@ func ValidateToken() gin.HandlerFunc {
 			return
 		}
 
-		err := models.VerifyToken(token)
+		userId, err := models.VerifyToken(token)
 
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Invalid token"})
 			return
 		}
+
+		c.Set("user_id", userId)
 
 		c.Next()
 	}

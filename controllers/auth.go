@@ -84,7 +84,7 @@ func ValidateToken(c *gin.Context) {
 		return
 	}
 
-	err = models.VerifyToken(body.Token)
+	_, err = models.VerifyToken(body.Token)
 
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid token"})
