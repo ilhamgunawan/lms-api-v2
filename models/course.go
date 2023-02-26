@@ -52,3 +52,16 @@ func UpdateCourse(course db.Course) (c db.Course, err error) {
 	c = course
 	return c, nil
 }
+
+func DeleteCourse(courseId string) (err error) {
+	deleted := time.Now().Format(time.RFC3339)
+	query := fmt.Sprintf("UPDATE course SET deleted='%s' WHERE id='%s'", deleted, courseId)
+
+	_, err = db.GetDB().Exec(query)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

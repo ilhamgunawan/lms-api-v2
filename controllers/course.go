@@ -72,3 +72,21 @@ func UpdateCourse(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"data": course})
 }
+
+func DeleteCourseById(c *gin.Context) {
+	courseId := c.Param("id")
+
+	if courseId == "" {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Missing fields"})
+		return
+	}
+
+	err := models.DeleteCourse(courseId)
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": "Success"})
+}

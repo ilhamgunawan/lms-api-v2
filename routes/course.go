@@ -35,11 +35,5 @@ func CourseRoutes(rg *gin.RouterGroup) {
 	course.PUT("/:id/update", controllers.UpdateCourse)
 
 	// Delete course by id
-	course.DELETE("/:id/delete", func(c *gin.Context) {
-		data := make(map[string]string)
-		data["id"] = c.Param("id")
-		data["message"] = "Delete course by id"
-
-		c.JSON(http.StatusOK, gin.H{"data": data})
-	})
+	course.DELETE("/:id/delete", controllers.DeleteCourseById)
 }
