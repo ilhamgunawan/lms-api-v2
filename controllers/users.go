@@ -141,6 +141,16 @@ func UpdateUserById(c *gin.Context) {
 	userId := c.Param("id")
 	body := db.UserAccount{}
 
+	// x, err := c.GetRawData()
+
+	// y := string(x)
+
+	// if err != nil {
+
+	// }
+
+	// err = json.Unmarshal(x, &body)
+
 	err := c.ShouldBindJSON(&body)
 
 	if err != nil || userId == "" || body.BirthDate == "" || body.FirstName == "" || body.LastName == "" || body.Gender == "" {
