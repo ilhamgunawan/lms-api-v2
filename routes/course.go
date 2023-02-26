@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ilhamgunawan/lms-api-v2/controllers"
 	"github.com/ilhamgunawan/lms-api-v2/middlewares"
 )
 
@@ -28,21 +29,10 @@ func CourseRoutes(rg *gin.RouterGroup) {
 	})
 
 	// Create course
-	course.POST("/create", func(c *gin.Context) {
-		data := make(map[string]string)
-		data["message"] = "Create course"
-
-		c.JSON(http.StatusOK, gin.H{"data": data})
-	})
+	course.POST("/create", controllers.CreateCourse)
 
 	// Update course by id
-	course.PUT("/:id/update", func(c *gin.Context) {
-		data := make(map[string]string)
-		data["id"] = c.Param("id")
-		data["message"] = "Update course by id"
-
-		c.JSON(http.StatusOK, gin.H{"data": data})
-	})
+	course.PUT("/:id/update", controllers.UpdateCourse)
 
 	// Delete course by id
 	course.DELETE("/:id/delete", func(c *gin.Context) {
