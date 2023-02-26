@@ -42,6 +42,13 @@ func ConnectDB(dataSourceName string) (*gorp.DbMap, error) {
 	// Register struct to table
 	dbmap.AddTableWithName(UserAccount{}, "user_account")
 	dbmap.AddTableWithName(UserLoginData{}, "user_login_data")
+	dbmap.AddTableWithName(Course{}, "course")
+	dbmap.AddTableWithName(Topic{}, "topic")
+	dbmap.AddTableWithName(Mission{}, "mission")
+	dbmap.AddTableWithName(MissionType{}, "mission_type")
+	dbmap.AddTableWithName(CourseUser{}, "course_user")
+	dbmap.AddTableWithName(TopicUser{}, "topic_user")
+	dbmap.AddTableWithName(MissionUser{}, "mission_user")
 
 	return dbmap, nil
 }
